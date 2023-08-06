@@ -8,7 +8,7 @@ import { Item } from '../../components/Item';
 import { Button } from '../../components/Button';
 
 import * as ImgePicker from 'expo-image-picker';
-import * as imageManipulator from 'expo-image-manipulator';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export function Home() {
   const [selectedImageUri, setSelectedImageUri] = useState('');
@@ -27,15 +27,23 @@ export function Home() {
         aspect:[4,4],
         quality:1
       })
-      if(response.canceled)
-        return;
-      else
-        setSelectedImageUri(response.assets[0].uri)
+      if(!response.canceled){
+      const imgManipuled = await ImageManipulator.manipulateAsync(
+        response.assets[0].uri,
+        [{resize:{width:900}}],
+        {
+          compress:1,
+          format:ImageManipulator.SaveFormat.JPEG,
+          base64:true
+        }
+      );
+      setSelectedImageUri(imgManipuled.uri)
+    }
+     
     } catch (error) {
       console.log(error)
     }
-
-   }
+  }   
 
   return (
     <View style={styles.container}>
