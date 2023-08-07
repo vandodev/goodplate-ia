@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     fontFamily: "Poppins_400Regular",
-    fontSize: 16,
+    fontSize: 12,
     color: "#FFFFFF",
   },
 });
