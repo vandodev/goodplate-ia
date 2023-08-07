@@ -6,6 +6,7 @@ import { styles } from './styles';
 import { Tip } from '../../components/Tip';
 import { Item, ItemProps } from '../../components/Item';
 import { Button } from '../../components/Button';
+import { Loading } from '../../components/Loading';
 
 import * as ImgePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -15,7 +16,8 @@ import { api } from '../../service/api';
 export function Home() {
   const [selectedImageUri, setSelectedImageUri] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [items, setItem] = useState<ItemProps[]>([])
+  const [items, setItem] = useState<ItemProps[]>([]);
+  const [message, setMessage] = useState('');
 
 
   async function handleSelectImage() {
@@ -105,17 +107,21 @@ export function Home() {
       }
 
       <View style={styles.bottom}>
-        <Tip message="Aqui vai uma dica" />
-
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 24 }}>
-          <View style={styles.items}>
-            {
-              items.map((item) => (
-                <Item key={item.name} data={item}/>
-              ))
-            }
-          </View>
-        </ScrollView>
+      {
+          isLoading ? <Loading/> : 
+          <>
+            <Tip message="Aqui vai uma dica" />
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 24 }}>
+              <View style={styles.items}>
+                {
+                  items.map((item)=>(
+                    <Item key={item.name} data={item} />
+                  ))
+                }
+              </View>
+            </ScrollView>
+          </>
+        }
       </View>
     </View>
   );
