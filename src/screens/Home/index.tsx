@@ -4,7 +4,7 @@ import { Image, ScrollView, Text, View, Alert } from 'react-native';
 import { styles } from './styles';
 
 import { Tip } from '../../components/Tip';
-import { Item } from '../../components/Item';
+import { Item, ItemProps } from '../../components/Item';
 import { Button } from '../../components/Button';
 
 import * as ImgePicker from 'expo-image-picker';
@@ -14,7 +14,9 @@ import { api } from '../../service/api';
 
 export function Home() {
   const [selectedImageUri, setSelectedImageUri] = useState('');
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [items, setItem] = useState<ItemProps[]>([])
+
 
   async function handleSelectImage() {
     try {
@@ -71,8 +73,18 @@ export function Home() {
           }
         }
       ]
+    });
+
+    // console.log(response.data.outputs[0].data);
+
+    const concept = response.data.outputs[0].data.concepts.map((concept:any)=>{
+      return {
+        name: concept.name,
+        percentage: `${concept.value * 100} %`
+      }
     })
-    console.log(response.data)
+    setItem(concept);
+    setIsLoading(false);
   }
 
   return (
@@ -97,7 +109,11 @@ export function Home() {
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 24 }}>
           <View style={styles.items}>
-            <Item data={{ name: 'Vegetal', percentage: '95%' }} />
+            {
+              items.map((item) => (
+                <Item key={item.name} data={item}/>
+              ))
+            }
           </View>
         </ScrollView>
       </View>
